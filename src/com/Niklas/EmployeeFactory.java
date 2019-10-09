@@ -8,7 +8,6 @@ public class EmployeeFactory {
         PLAYER("Player"),
         COACH("Coach");
 
-
         public String menuString;
 
         EmployeeType(String menuString) {

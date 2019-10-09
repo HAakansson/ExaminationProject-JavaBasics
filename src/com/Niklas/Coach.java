@@ -20,6 +20,6 @@ public class Coach extends Employee {
 
     @Override
     public String toString() {
-        return String.format("Coach - Name: %s &s. Typ of Coach: %s",getFirstName(),getLastName(),getTypeOfCoach());
+        return String.format("Coach - Name: %s %s. Typ of Coach: %s",getFirstName(),getLastName(),getTypeOfCoach());
     }
 }

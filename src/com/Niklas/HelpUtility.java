@@ -63,7 +63,7 @@ public class HelpUtility {
 
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);
-            if (Character.isLetter(ch) || Character.isDigit(ch) || ch == ',') {
+            if (Character.isLetter(ch) || Character.isDigit(ch) || ch == ',' || ch == ' ') {
                 continue;
             } else {
                 return false;

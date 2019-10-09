@@ -1,5 +1,7 @@
 package com.Niklas;
 
+import java.util.ArrayList;
+
 public class View {
 
     private static View instance = null;
@@ -73,6 +75,16 @@ public class View {
         System.out.print("Enter the first name and the last name of the employee you want to fire (separated by comma): ");
         String name = HelpUtility.stringInputWithErrorCheck();
         return name.split(",");
+    }
+
+    public void showEmployees(ArrayList<Player> players, ArrayList<Coach> coaches){
+
+        for (Player player : players){
+            System.out.println(player);
+        }
+        for (Coach coach : coaches){
+            System.out.println(coach);
+        }
     }
 
 }

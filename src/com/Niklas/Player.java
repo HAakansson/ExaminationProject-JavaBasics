@@ -27,6 +27,6 @@ public class Player extends Employee {
 
     @Override
     public String toString() {
-        return String.format("Player - Name: %s &s. Position: %s",getFirstName(),getLastName(),getPosition());
+        return String.format("Player - Name: %s %s. Position: %s",getFirstName(),getLastName(),getPosition());
     }
 }

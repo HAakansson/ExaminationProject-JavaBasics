@@ -41,7 +41,7 @@ public class SkurupAIFProgram {
                     fireEmployee();
                     break;
                 case SHOW_EMPLOYEES:
-                    showEmployees();
+                    view.showEmployees(playersInClub,coachesInClub);
                     break;
                 case SHOW_A_SPECIFIC_EMPLOYEE:
 //                    showASpecificEmployee();
@@ -126,8 +126,5 @@ public class SkurupAIFProgram {
 
     }
 
-    public void showEmployees(){
-
-    }
 
 }
