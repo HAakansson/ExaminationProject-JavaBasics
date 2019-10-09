@@ -71,6 +71,17 @@ public class View {
         return info;
     }
 
+    public String addInfoToCreationOfStatistics(){
+        String info;
+
+        System.out.printn("Enter the correct integer of the following:\n" +
+                "season, goals, assists, yellow cards, red cards, games, goals ratio. Separated everything by comma (\",\"). Nothing else!\n" +
+                "Your input: ");
+
+        info = HelpUtility.stringInputWithErrorCheck();
+        return info;
+    }
+
     public String [] getNameOfEmployeeToRemove(){
         System.out.print("Enter the first name and the last name of the employee you want to fire (separated by comma): ");
         String name = HelpUtility.stringInputWithErrorCheck();
