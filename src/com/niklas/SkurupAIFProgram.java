@@ -125,7 +125,7 @@ public class SkurupAIFProgram {
 
                 choiceAddMore = HelpUtility.onlyYesOrNo();
 
-                if(choiceAddMore.equalsIgnoreCase("n"))
+                if (choiceAddMore.equalsIgnoreCase("n"))
                     addMoreStatistics = false;
 
             } while (addMoreStatistics);
@@ -141,29 +141,38 @@ public class SkurupAIFProgram {
 
         EmployeeFactory.EmployeeType employeeType;
         int choice = whichEmployeeDepartment();
-        int i = 0;
         employeeType = EmployeeFactory.EmployeeType.values()[choice];
-
-        String[] nameToRemoveParts = view.getNameOfEmployeeToRemove();
-        String firstName = nameToRemoveParts[0];
-        String lastName = nameToRemoveParts[1];
+        String[] nameToRemoveParts;
+        String firstName;
+        String lastName;
+        int indexReturned;
 
         switch (employeeType) {
             case PLAYER:
-                for (i = 0; i < playersInClub.size(); i++) {
-                    if (firstName.equalsIgnoreCase(playersInClub.get(i).getFirstName())) {
-                        playersInClub.remove(i);
-                    }
+                nameToRemoveParts = view.getNameOfEmployeeToRemove();
+                firstName = nameToRemoveParts[0];
+                lastName = nameToRemoveParts[1];
+                indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+
+                if (indexReturned == -1) {
+                    view.showMessage("The player with that name does not play for the club.\n");
+                } else {
+                    playersInClub.remove(indexReturned);
+                    view.showMessage(String.format("The player %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 }
-                view.showMessage(String.format("The player %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 break;
             case COACH:
-                for (i = 0; i < coachesInClub.size(); i++) {
-                    if (firstName.equalsIgnoreCase(coachesInClub.get(i).getFirstName())) {
-                        coachesInClub.remove(i);
-                    }
+                nameToRemoveParts = view.getNameOfEmployeeToRemove();
+                firstName = nameToRemoveParts[0];
+                lastName = nameToRemoveParts[1];
+                indexReturned = ifCoachCoachesForClub(firstName, lastName);
+
+                if (indexReturned == -1) {
+                    view.showMessage("The coach with that name does not play for the club.\n");
+                } else {
+                    playersInClub.remove(indexReturned);
+                    view.showMessage(String.format("The coach %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 }
-                view.showMessage(String.format("The coach %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 break;
             case NONE:
                 view.showMessage("Back to main menu...\n");
@@ -187,5 +196,30 @@ public class SkurupAIFProgram {
 
     }
 
+    public int ifPlayerPlaysForClub(String firstName, String lastName) {
+
+        int i = 0;
+        for (Player player : playersInClub) {
+            if (firstName.equalsIgnoreCase(player.getFirstName()) && lastName.equalsIgnoreCase(player.getLastName())) {
+                return i;
+            } else {
+                i++;
+            }
+        }
+        return -1;
+    }
+
+    public int ifCoachCoachesForClub(String firstName, String lastName) {
+
+        int i = 0;
+        for (Coach coach : coachesInClub) {
+            if (firstName.equalsIgnoreCase(coach.getFirstName()) && lastName.equalsIgnoreCase(coach.getLastName())) {
+                return i;
+            } else {
+                i++;
+            }
+        }
+        return -1;
+    }
 
 }
