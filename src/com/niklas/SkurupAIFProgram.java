@@ -33,6 +33,7 @@ public class SkurupAIFProgram {
                 case ADD_PLAYER:
                     addPlayer(EmployeeFactory.EmployeeType.PLAYER, view.addInfoToCreationOfEmployee());
                     view.showMessage("Player added!\n");
+                    addStatisticsToPlayer();
                     break;
                 case ADD_COACH:
                     addCoach(EmployeeFactory.EmployeeType.COACH, view.addInfoToCreationOfEmployee());
@@ -42,7 +43,14 @@ public class SkurupAIFProgram {
                     fireEmployee();
                     break;
                 case SHOW_EMPLOYEES:
-                    view.showEmployees(playersInClub,coachesInClub);
+                    view.showMessage("The following employees work for the club:\n");
+                    if (playersInClub.size() == 0) {
+                        view.showMessage("\nNo players play for the club at the moment.\n");
+                    }
+                    if (coachesInClub.size() == 0) {
+                        view.showMessage("No coaches are employed by the club at the moment.");
+                    }
+                    view.showEmployees(playersInClub, coachesInClub);
                     break;
                 case SHOW_A_SPECIFIC_EMPLOYEE:
 //                    showASpecificEmployee();
@@ -51,8 +59,8 @@ public class SkurupAIFProgram {
 //                    showStatistics();
                     break;
                 case SAVE_TO_FILE:
-                    HelpUtility.saveObject(playersInClub,"src/com/files/players.ser", StandardOpenOption.CREATE);
-                    HelpUtility.saveObject(coachesInClub,"src/com/files/coaches.ser", StandardOpenOption.CREATE);
+                    HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
+                    HelpUtility.saveObject(coachesInClub, "src/com/files/coaches.ser", StandardOpenOption.CREATE);
                     view.showMessage("Employees have been saved to system.\n");
                     break;
                 case LOAD_FROM_FILE:
@@ -77,6 +85,7 @@ public class SkurupAIFProgram {
         } else {
             view.errorMessage("Could not add the player. Try again.");
         }
+
     }
 
     public void addCoach(EmployeeFactory.EmployeeType employeeType, String info) {
@@ -86,6 +95,46 @@ public class SkurupAIFProgram {
         } else {
             view.errorMessage("Could not add the coach. Try again.");
         }
+
+    }
+
+    public void addStatisticsToPlayer() {
+
+        view.showMessage("\n");
+
+        boolean addMoreStatistics = true;
+        String choiceAdd;
+        String choiceAddMore;
+
+        view.showMessage("Do you want to add statistics?\n" +
+                "Your choice: ");
+
+        choiceAdd = HelpUtility.onlyYesOrNo();
+
+
+        if (choiceAdd.equalsIgnoreCase("y")) {
+
+            do {
+
+                view.showMessage("\n");
+                Statistics statistics = StatisticsFactory.createStatistics(view.addInfoToCreationOfStatistics());
+                playersInClub.get(playersInClub.size() - 1).getPlayerStats().add(statistics);
+                view.showMessage("Statistics added!\n" +
+                        "\nDo you want to add more?\n" +
+                        "Your choice: ");
+
+                choiceAddMore = HelpUtility.onlyYesOrNo();
+
+                if(choiceAddMore.equalsIgnoreCase("n"))
+                    addMoreStatistics = false;
+
+            } while (addMoreStatistics);
+
+        } else {
+
+            view.showMessage("Okay, back to main menu...\n");
+        }
+
     }
 
     public void fireEmployee() {
@@ -101,28 +150,29 @@ public class SkurupAIFProgram {
 
         switch (employeeType) {
             case PLAYER:
-                for(i = 0; i < playersInClub.size();i++){
-                    if(firstName.equalsIgnoreCase(playersInClub.get(i).getFirstName())){
+                for (i = 0; i < playersInClub.size(); i++) {
+                    if (firstName.equalsIgnoreCase(playersInClub.get(i).getFirstName())) {
                         playersInClub.remove(i);
                     }
                 }
-                view.showMessage(String.format("The player %1$s %2$s has been fired from the squad!\n",firstName,lastName));
+                view.showMessage(String.format("The player %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 break;
             case COACH:
-                for(i = 0; i < coachesInClub.size();i++){
-                    if(firstName.equalsIgnoreCase(coachesInClub.get(i).getFirstName())){
+                for (i = 0; i < coachesInClub.size(); i++) {
+                    if (firstName.equalsIgnoreCase(coachesInClub.get(i).getFirstName())) {
                         coachesInClub.remove(i);
                     }
                 }
-                view.showMessage(String.format("The coach %1$s %2$s has been fired from the squad!\n",firstName,lastName));
+                view.showMessage(String.format("The coach %1$s %2$s has been fired from the squad!\n", firstName, lastName));
                 break;
             case NONE:
                 view.showMessage("Back to main menu...\n");
                 break;
         }
+
     }
 
-    public int whichEmployeeDepartment(){
+    public int whichEmployeeDepartment() {
 
         int choice;
         int i = 0;

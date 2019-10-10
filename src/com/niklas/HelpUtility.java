@@ -72,6 +72,23 @@ public class HelpUtility {
         return true;
     }
 
+    public static String onlyYesOrNo(){
+
+        String str;
+
+        while(true){
+
+            str = input.nextLine();
+
+            if(str.equalsIgnoreCase("y") || str.equalsIgnoreCase("n")){
+                return str;
+            } else{
+                View.getInstance().showMessage("Wrong input, you may only enter y/n. Try again: ");
+            }
+        }
+
+    }
+
     public static void helpText(){
         System.out.println();
         System.out.println("Here it is supposed to be some help text, but no..");

@@ -78,7 +78,7 @@ public class View {
         String info;
 
         System.out.print("Enter the correct integer of the following:\n" +
-                "season, goals, assists, yellow cards, red cards, games, goals ratio. Separated everything by comma (\",\"). Nothing else!\n" +
+                "season, goals, assists, yellow cards, red cards, games. Separated everything by comma (\",\"). Nothing else!\n" +
                 "Your input: ");
 
         info = HelpUtility.stringInputWithErrorCheck();
@@ -93,6 +93,8 @@ public class View {
     }
 
     public void showEmployees(ArrayList<Player> players, ArrayList<Coach> coaches){
+
+        System.out.println("\n");
 
         for (Player player : players){
             System.out.println(player);
