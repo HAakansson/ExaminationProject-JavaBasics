@@ -1,4 +1,4 @@
-package com.Niklas;
+package com.niklas;
 
 import java.util.ArrayList;
 

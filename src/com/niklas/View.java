@@ -1,4 +1,4 @@
-package com.Niklas;
+package com.niklas;
 
 import java.util.ArrayList;
 
@@ -25,6 +25,8 @@ public class View {
         SHOW_EMPLOYEES("Show employees"),
         SHOW_A_SPECIFIC_EMPLOYEE("Show a specific employee"),
         SHOW_STATISTICS("Show statistics"),
+        SAVE_TO_FILE("Save employees"),
+        LOAD_FROM_FILE("Load employees"),
         SHOW_HELP_PAGE("Show help page");
 
         private String description;
@@ -72,13 +74,15 @@ public class View {
     }
 
     public String addInfoToCreationOfStatistics(){
+
         String info;
 
-        System.out.printn("Enter the correct integer of the following:\n" +
+        System.out.print("Enter the correct integer of the following:\n" +
                 "season, goals, assists, yellow cards, red cards, games, goals ratio. Separated everything by comma (\",\"). Nothing else!\n" +
                 "Your input: ");
 
         info = HelpUtility.stringInputWithErrorCheck();
+
         return info;
     }
 

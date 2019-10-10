@@ -1,4 +1,4 @@
-package com.Niklas;
+package com.niklas;
 
 public class Coach extends Employee {
 

@@ -1,5 +1,6 @@
-package com.Niklas;
+package com.niklas;
 
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 public class SkurupAIFProgram {
@@ -48,6 +49,16 @@ public class SkurupAIFProgram {
                     break;
                 case SHOW_STATISTICS:
 //                    showStatistics();
+                    break;
+                case SAVE_TO_FILE:
+                    HelpUtility.saveObject(playersInClub,"src/com/files/players.ser", StandardOpenOption.CREATE);
+                    HelpUtility.saveObject(coachesInClub,"src/com/files/coaches.ser", StandardOpenOption.CREATE);
+                    view.showMessage("Employees have been saved to system.\n");
+                    break;
+                case LOAD_FROM_FILE:
+                    playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
+                    coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
+                    view.showMessage("The employees have been loaded from the system.\n");
                     break;
                 case SHOW_HELP_PAGE:
                     HelpUtility.helpText();
