@@ -16,6 +16,8 @@ public class Coach extends Employee {
     @Override
     public void presentYourself() {
 
+        System.out.printf("Hi! My name is %s %s and I am %d years old and currently I work as %s!\n",getFirstName(),getLastName(),getAge(),getTypeOfCoach());
+
     }
 
     @Override

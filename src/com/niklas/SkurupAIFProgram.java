@@ -53,10 +53,10 @@ public class SkurupAIFProgram {
                     view.showEmployees(playersInClub, coachesInClub);
                     break;
                 case SHOW_A_SPECIFIC_EMPLOYEE:
-//                    showASpecificEmployee();
+                    showASpecificEmployee();
                     break;
                 case SHOW_STATISTICS:
-//                    showStatistics();
+                    showStatistics();
                     break;
                 case SAVE_TO_FILE:
                     HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
@@ -106,7 +106,7 @@ public class SkurupAIFProgram {
         String choiceAdd;
         String choiceAddMore;
 
-        view.showMessage("Do you want to add statistics?\n" +
+        view.showMessage("Do you want to add statistics (y/n)?\n" +
                 "Your choice: ");
 
         choiceAdd = HelpUtility.onlyYesOrNo();
@@ -120,7 +120,7 @@ public class SkurupAIFProgram {
                 Statistics statistics = StatisticsFactory.createStatistics(view.addInfoToCreationOfStatistics());
                 playersInClub.get(playersInClub.size() - 1).getPlayerStats().add(statistics);
                 view.showMessage("Statistics added!\n" +
-                        "\nDo you want to add more?\n" +
+                        "\nDo you want to add more (y/n)?\n" +
                         "Your choice: ");
 
                 choiceAddMore = HelpUtility.onlyYesOrNo();
@@ -139,9 +139,8 @@ public class SkurupAIFProgram {
 
     public void fireEmployee() {
 
-        EmployeeFactory.EmployeeType employeeType;
         int choice = whichEmployeeDepartment();
-        employeeType = EmployeeFactory.EmployeeType.values()[choice];
+        EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
         String[] nameToRemoveParts;
         String firstName;
         String lastName;
@@ -149,7 +148,7 @@ public class SkurupAIFProgram {
 
         switch (employeeType) {
             case PLAYER:
-                nameToRemoveParts = view.getNameOfEmployeeToRemove();
+                nameToRemoveParts = view.getNameOfEmployee();
                 firstName = nameToRemoveParts[0];
                 lastName = nameToRemoveParts[1];
                 indexReturned = ifPlayerPlaysForClub(firstName, lastName);
@@ -162,7 +161,7 @@ public class SkurupAIFProgram {
                 }
                 break;
             case COACH:
-                nameToRemoveParts = view.getNameOfEmployeeToRemove();
+                nameToRemoveParts = view.getNameOfEmployee();
                 firstName = nameToRemoveParts[0];
                 lastName = nameToRemoveParts[1];
                 indexReturned = ifCoachCoachesForClub(firstName, lastName);
@@ -220,6 +219,50 @@ public class SkurupAIFProgram {
             }
         }
         return -1;
+    }
+
+    public void showASpecificEmployee() {
+
+        int choice = whichEmployeeDepartment();
+        EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
+
+        String[] nameParts = view.getNameOfEmployee();
+        String firstName = nameParts[0];
+        String lastName = nameParts[1];
+        int indexReturned;
+
+        switch (employeeType) {
+            case PLAYER:
+                indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+                playersInClub.get(indexReturned).presentYourself();
+                break;
+            case COACH:
+                indexReturned = ifCoachCoachesForClub(firstName, lastName);
+                coachesInClub.get(indexReturned).presentYourself();
+                break;
+            case NONE:
+                view.showMessage("Back to main menu...\n");
+                break;
+        }
+    }
+
+    public void showStatistics() {
+
+        String[] nameParts = view.getNameOfEmployee();
+
+        if (nameParts.length == 2) {
+
+            String firstName = nameParts[0];
+            String lastName = nameParts[1];
+
+            int indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+            view.showMessage(String.format("\nPlayer: %s %s:\n", firstName, lastName));
+            for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
+                view.showMessage(stats.toString() + "\n");
+            }
+        } else {
+            view.showMessage("Wrong input. Try again.\n");
+        }
     }
 
 }

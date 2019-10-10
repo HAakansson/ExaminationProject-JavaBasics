@@ -86,8 +86,8 @@ public class View {
         return info;
     }
 
-    public String [] getNameOfEmployeeToRemove(){
-        System.out.print("Enter the first name and the last name of the employee you want to fire (separated by comma): ");
+    public String [] getNameOfEmployee(){
+        System.out.print("Enter the first name and the last name of the employee (separated by comma): ");
         String name = HelpUtility.stringInputWithErrorCheck();
         return name.split(",");
     }

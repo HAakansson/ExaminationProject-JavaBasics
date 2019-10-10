@@ -11,8 +11,7 @@ public class StatisticsFactory {
         int yellowCards = Integer.parseInt(infoParts[3]);
         int redCards = Integer.parseInt(infoParts[4]);
         int games = Integer.parseInt(infoParts[5]);
-        double goalsRatio = (double)(goals/games);
 
-        return new Statistics(season,goals,assists,yellowCards,redCards,games,goalsRatio);
+        return new Statistics(season,goals,assists,yellowCards,redCards,games);
     }
 }

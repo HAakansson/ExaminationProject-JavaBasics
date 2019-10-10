@@ -22,7 +22,7 @@ public class Player extends Employee {
 
     @Override
     public void presentYourself() {
-        System.out.printf("Hi! My name is %s %s and I am %d years old and currently I play as a %s!",getFirstName(),getLastName(),getAge(),getPosition());
+        System.out.printf("Hi! My name is %s %s and I am %d years old and currently I play as a %s!\n",getFirstName(),getLastName(),getAge(),getPosition());
     }
 
     @Override

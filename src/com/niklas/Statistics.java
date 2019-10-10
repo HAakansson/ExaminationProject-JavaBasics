@@ -14,14 +14,14 @@ public class Statistics implements Serializable, Comparable<Statistics> {
 
     private static int sortingChoice;
 
-    public Statistics(int season, int goals, int assists, int yellowCards, int redCards, int games, double goalsRatio) {
+    public Statistics(int season, int goals, int assists, int yellowCards, int redCards, int games) {
         this.season = season;
         this.goals = goals;
         this.assists = assists;
         this.yellowCards = yellowCards;
         this.redCards = redCards;
         this.games = games;
-        this.goalsRatio = goalsRatio;
+        this.goalsRatio = (double) goals / (double) games;
     }
 
     public static void setSortingChoice(int sortingChoice) {
@@ -30,7 +30,7 @@ public class Statistics implements Serializable, Comparable<Statistics> {
 
     @Override
     public String toString() {
-        return String.format("",season,goals,assists,yellowCards,redCards,games,goalsRatio);
+        return String.format("Season: %d. Goals: %d. Assists: %d. Yellow Cards: %d. Red Cards: %d. Games: %d. Goals Ratio: %f",season,goals,assists,yellowCards,redCards,games,goalsRatio);
     }
 
     @Override
