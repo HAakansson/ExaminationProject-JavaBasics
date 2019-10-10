@@ -49,7 +49,7 @@ public class HelpUtility {
         String str;
         while (true) {
             str = input.nextLine();
-            if (isOnlyLettersNumbersAndComas(str)) {
+            if (isOnlyLettersNumbersComasAndSpaces(str)) {
                 break;
             } else {
                 System.out.print("Wrong input. You  may only enter alphabetic letters (a-z and å,ä,ö) or commas. Try again: ");
@@ -59,7 +59,7 @@ public class HelpUtility {
 
     }
 
-    public static boolean isOnlyLettersNumbersAndComas(String str) {
+    public static boolean isOnlyLettersNumbersComasAndSpaces(String str) {
 
         for (int i = 0; i < str.length(); i++) {
             char ch = str.charAt(i);

@@ -79,21 +79,31 @@ public class SkurupAIFProgram {
     }
 
     public void addPlayer(EmployeeFactory.EmployeeType employeeType, String info) {
-        Player player = (Player) EmployeeFactory.createEmployee(employeeType, info);
-        if (player != null) {
-            playersInClub.add(player);
+
+        if (playersInClub.size() == MAX_PLAYERS) {
+            view.showMessage("I am sorry, the squad is full.");
         } else {
-            view.errorMessage("Could not add the player. Try again.");
+            Player player = (Player) EmployeeFactory.createEmployee(employeeType, info);
+            if (player != null) {
+                playersInClub.add(player);
+            } else {
+                view.errorMessage("Could not add the player. Try again.");
+            }
         }
 
     }
 
     public void addCoach(EmployeeFactory.EmployeeType employeeType, String info) {
-        Coach coach = (Coach) EmployeeFactory.createEmployee(employeeType, info);
-        if (coach != null) {
-            coachesInClub.add(coach);
+
+        if (coachesInClub.size() == MAX_COACHES) {
+            view.showMessage("I am sorry, the coach team is full.");
         } else {
-            view.errorMessage("Could not add the coach. Try again.");
+            Coach coach = (Coach) EmployeeFactory.createEmployee(employeeType, info);
+            if (coach != null) {
+                coachesInClub.add(coach);
+            } else {
+                view.errorMessage("Could not add the coach. Try again.");
+            }
         }
 
     }
@@ -139,7 +149,7 @@ public class SkurupAIFProgram {
 
     public void fireEmployee() {
 
-        int choice = whichEmployeeDepartment();
+        int choice = decideWhichEmployeeDepartment();
         EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
         String[] nameToRemoveParts;
         String firstName;
@@ -151,7 +161,7 @@ public class SkurupAIFProgram {
                 nameToRemoveParts = view.getNameOfEmployee();
                 firstName = nameToRemoveParts[0];
                 lastName = nameToRemoveParts[1];
-                indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+                indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
 
                 if (indexReturned == -1) {
                     view.showMessage("The player with that name does not play for the club.\n");
@@ -164,7 +174,7 @@ public class SkurupAIFProgram {
                 nameToRemoveParts = view.getNameOfEmployee();
                 firstName = nameToRemoveParts[0];
                 lastName = nameToRemoveParts[1];
-                indexReturned = ifCoachCoachesForClub(firstName, lastName);
+                indexReturned = checkIfCoachCoachesForClub(firstName, lastName);
 
                 if (indexReturned == -1) {
                     view.showMessage("The coach with that name does not play for the club.\n");
@@ -180,7 +190,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public int whichEmployeeDepartment() {
+    public int decideWhichEmployeeDepartment() {
 
         int choice;
         int i = 0;
@@ -195,7 +205,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public int ifPlayerPlaysForClub(String firstName, String lastName) {
+    public int checkIfPlayerPlaysForClub(String firstName, String lastName) {
 
         int i = 0;
         for (Player player : playersInClub) {
@@ -208,7 +218,7 @@ public class SkurupAIFProgram {
         return -1;
     }
 
-    public int ifCoachCoachesForClub(String firstName, String lastName) {
+    public int checkIfCoachCoachesForClub(String firstName, String lastName) {
 
         int i = 0;
         for (Coach coach : coachesInClub) {
@@ -223,7 +233,7 @@ public class SkurupAIFProgram {
 
     public void showASpecificEmployee() {
 
-        int choice = whichEmployeeDepartment();
+        int choice = decideWhichEmployeeDepartment();
         EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
 
         String[] nameParts = view.getNameOfEmployee();
@@ -233,11 +243,11 @@ public class SkurupAIFProgram {
 
         switch (employeeType) {
             case PLAYER:
-                indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+                indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
                 playersInClub.get(indexReturned).presentYourself();
                 break;
             case COACH:
-                indexReturned = ifCoachCoachesForClub(firstName, lastName);
+                indexReturned = checkIfCoachCoachesForClub(firstName, lastName);
                 coachesInClub.get(indexReturned).presentYourself();
                 break;
             case NONE:
@@ -255,7 +265,7 @@ public class SkurupAIFProgram {
             String firstName = nameParts[0];
             String lastName = nameParts[1];
 
-            int indexReturned = ifPlayerPlaysForClub(firstName, lastName);
+            int indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
             view.showMessage(String.format("\nPlayer: %s %s:\n", firstName, lastName));
             for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
                 view.showMessage(stats.toString() + "\n");
