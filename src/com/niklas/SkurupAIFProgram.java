@@ -2,6 +2,7 @@ package com.niklas;
 
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SkurupAIFProgram {
 
@@ -66,7 +67,13 @@ public class SkurupAIFProgram {
                 case LOAD_FROM_FILE:
                     playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
                     coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
-                    view.showMessage("The employees have been loaded from the system.\n");
+
+                    if(playersInClub == null || coachesInClub == null){
+                        view.errorMessage("Files could not be loaded. Report to nearest awesome hacker!");
+                    } else {
+                        view.showMessage("The employees have been loaded from the system.\n");
+                    }
+
                     break;
                 case SHOW_HELP_PAGE:
                     HelpUtility.helpText();
@@ -78,7 +85,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public void addPlayer(EmployeeFactory.EmployeeType employeeType, String info) {
+    public void addPlayer(EmployeeFactory.EmployeeType employeeType, String [] info) {
 
         if (playersInClub.size() == MAX_PLAYERS) {
             view.showMessage("I am sorry, the squad is full.");
@@ -93,7 +100,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public void addCoach(EmployeeFactory.EmployeeType employeeType, String info) {
+    public void addCoach(EmployeeFactory.EmployeeType employeeType, String [] info) {
 
         if (coachesInClub.size() == MAX_COACHES) {
             view.showMessage("I am sorry, the coach team is full.");
@@ -201,7 +208,7 @@ public class SkurupAIFProgram {
         }
         view.showMessage("\nYour choice: ");
 
-        return HelpUtility.intWithTryCatch();
+        return HelpUtility.returnsIntAfterErrorCheck();
 
     }
 
@@ -266,13 +273,29 @@ public class SkurupAIFProgram {
             String lastName = nameParts[1];
 
             int indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
-            view.showMessage(String.format("\nPlayer: %s %s:\n", firstName, lastName));
-            for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
-                view.showMessage(stats.toString() + "\n");
-            }
+            ArrayList<Statistics> temporaryStatsListForPlayer = playersInClub.get(indexReturned).getPlayerStats();
+
+            do {
+                Collections.sort(temporaryStatsListForPlayer);
+
+                view.showMessage(String.format("\nPlayer - %s %s:\n", firstName, lastName));
+                for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
+                    view.showMessage(stats.toString() + "\n");
+                }
+
+                view.showMessage("\nSort by: (1) Season, (2) Goals, (3) Assists, (4) Yellow Cards, (5) Red Cards, (6) Games, (7) Goals Ratio, (0) Exit back to Main Menu.\n" +
+                        "Your choice: ");
+
+                Statistics.sortingChoice = HelpUtility.returnsIntAfterErrorCheck();
+
+            } while (Statistics.sortingChoice != 0);
+
+            view.showMessage("Okay, back to main menu...\n");
+
         } else {
             view.showMessage("Wrong input. Try again.\n");
         }
+
     }
 
 }

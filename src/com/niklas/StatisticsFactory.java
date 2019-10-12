@@ -2,15 +2,14 @@ package com.niklas;
 
 public class StatisticsFactory {
 
-    public static Statistics createStatistics(String info){
+    public static Statistics createStatistics(String [] info){
 
-        String [] infoParts = info.split(",");
-        int season = Integer.parseInt(infoParts[0]);
-        int goals = Integer.parseInt(infoParts[1]);
-        int assists = Integer.parseInt(infoParts[2]);
-        int yellowCards = Integer.parseInt(infoParts[3]);
-        int redCards = Integer.parseInt(infoParts[4]);
-        int games = Integer.parseInt(infoParts[5]);
+        int season = Integer.parseInt(info[0]);
+        int goals = Integer.parseInt(info[1]);
+        int assists = Integer.parseInt(info[2]);
+        int yellowCards = Integer.parseInt(info[3]);
+        int redCards = Integer.parseInt(info[4]);
+        int games = Integer.parseInt(info[5]);
 
         return new Statistics(season,goals,assists,yellowCards,redCards,games);
     }

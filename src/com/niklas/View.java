@@ -47,7 +47,14 @@ public class View {
             System.out.printf("%d: %s\n",i++,choice.description);
         }
         System.out.print("\nYour choice: ");
-        menuChoice = HelpUtility.intWithTryCatch();
+        while(true) {
+            menuChoice = HelpUtility.returnsIntAfterErrorCheck();
+            if(menuChoice > MainMenuChoice.values().length - 1 || menuChoice < 0){
+                errorMessage("Invalid menu choice. Try again: ");
+            } else {
+                break;
+            }
+        }
         System.out.println();
         return MainMenuChoice.values()[menuChoice];
     }
@@ -57,38 +64,51 @@ public class View {
     }
 
     public void errorMessage(String errorMessage){
-        System.out.printf("Error: %s\n",errorMessage);
+        System.out.printf("Error: %s",errorMessage);
     }
 
-    public String addInfoToCreationOfEmployee(){
+    public String [] addInfoToCreationOfEmployee(){
 
         String info;
 
-        System.out.print("Enter the following:" +
-                " first name, last name, age, and (depending on if it's a player/coach) " +
-                "position/typeOfCoach. Everything separated by comma (\",\"). Nothing else!\n" +
-                "Your input: ");
+        while(true) {
+            System.out.print("Enter the following:" +
+                    " first name, last name, age, and (depending on if it's a player/coach) " +
+                    "position/typeOfCoach. Everything separated by comma (\",\"). Nothing else!\n" +
+                    "Your input: ");
 
-        info = HelpUtility.stringInputWithErrorCheck();
-        return info;
+            info = HelpUtility.returnsStringAfterErrorCheck();
+            String [] infoParts = info.split(",");
+            if(infoParts.length != 4){
+                errorMessage("Something went wrong with your input, try again.\n");
+            } else{
+                return infoParts;
+            }
+        }
     }
 
-    public String addInfoToCreationOfStatistics(){
+    public String [] addInfoToCreationOfStatistics(){
 
         String info;
 
-        System.out.print("Enter the correct integer of the following:\n" +
-                "season, goals, assists, yellow cards, red cards, games. Separated everything by comma (\",\"). Nothing else!\n" +
-                "Your input: ");
+        while(true) {
+            System.out.print("Enter the correct integer of the following:\n" +
+                    "season, goals, assists, yellow cards, red cards, games. Separated everything by comma (\",\"). Nothing else!\n" +
+                    "Your input: ");
 
-        info = HelpUtility.stringInputWithErrorCheck();
-
-        return info;
+            info = HelpUtility.returnsStringAfterErrorCheck();
+            String [] infoParts = info.split(",");
+            if(infoParts.length != 6){
+                errorMessage("Something went wrong with you input, try again.\n");
+            } else{
+                return infoParts;
+            }
+        }
     }
 
     public String [] getNameOfEmployee(){
         System.out.print("Enter the first name and the last name of the employee (separated by comma): ");
-        String name = HelpUtility.stringInputWithErrorCheck();
+        String name = HelpUtility.returnsStringAfterErrorCheck();
         return name.split(",");
     }
 

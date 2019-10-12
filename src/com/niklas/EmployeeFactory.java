@@ -15,13 +15,12 @@ public class EmployeeFactory {
         }
     }
 
-    public static Employee createEmployee(EmployeeType employeeType, String info){
+    public static Employee createEmployee(EmployeeType employeeType, String [] info){
 
-        String [] infoParts = info.split(",");
-        String firstName = infoParts[0];
-        String lastName = infoParts[1];
-        int age = Integer.parseInt(infoParts[2]);
-        String positionOrTypeOfCoach = infoParts[3];
+        String firstName = info[0];
+        String lastName = info[1];
+        int age = Integer.parseInt(info[2]);
+        String positionOrTypeOfCoach = info[3];
 
         switch (employeeType){
 
