@@ -14,8 +14,8 @@ public class SkurupAIFProgram {
 
     public SkurupAIFProgram() {
         view = View.getInstance();
+        loadFromFile();
     }
-
 
     public void start() {
 
@@ -24,7 +24,7 @@ public class SkurupAIFProgram {
 
         do {
 
-            View.MainMenuChoice choice = View.getInstance().showMenu();
+            View.MainMenuChoice choice = view.showMenuAndGetChoice(View.MainMenuChoice.values());
 
             switch (choice) {
                 case EXIT_PROGRAM:
@@ -63,17 +63,6 @@ public class SkurupAIFProgram {
                     HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
                     HelpUtility.saveObject(coachesInClub, "src/com/files/coaches.ser", StandardOpenOption.CREATE);
                     view.showMessage("Employees have been saved to system.\n");
-                    break;
-                case LOAD_FROM_FILE:
-                    playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
-                    coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
-
-                    if(playersInClub == null || coachesInClub == null){
-                        view.errorMessage("Files could not be loaded. Report to nearest awesome hacker!");
-                    } else {
-                        view.showMessage("The employees have been loaded from the system.\n");
-                    }
-
                     break;
                 case SHOW_HELP_PAGE:
                     HelpUtility.helpText();
@@ -156,8 +145,8 @@ public class SkurupAIFProgram {
 
     public void fireEmployee() {
 
-        int choice = decideWhichEmployeeDepartment();
-        EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
+        EmployeeFactory.EmployeeType employeeType = view.showMenuAndGetChoice(EmployeeFactory.EmployeeType.values());
+
         String[] nameToRemoveParts;
         String firstName;
         String lastName;
@@ -197,21 +186,6 @@ public class SkurupAIFProgram {
 
     }
 
-    public int decideWhichEmployeeDepartment() {
-
-        int choice;
-        int i = 0;
-
-        view.showMessage("From which employee department?\n");
-        for (EmployeeFactory.EmployeeType type : EmployeeFactory.EmployeeType.values()) {
-            view.showMessage(String.format("%d: %s\n", i++, type.menuString));
-        }
-        view.showMessage("\nYour choice: ");
-
-        return HelpUtility.returnsIntAfterErrorCheck();
-
-    }
-
     public int checkIfPlayerPlaysForClub(String firstName, String lastName) {
 
         int i = 0;
@@ -240,9 +214,7 @@ public class SkurupAIFProgram {
 
     public void showASpecificEmployee() {
 
-        int choice = decideWhichEmployeeDepartment();
-        EmployeeFactory.EmployeeType employeeType = EmployeeFactory.EmployeeType.values()[choice];
-
+        EmployeeFactory.EmployeeType employeeType = view.showMenuAndGetChoice(EmployeeFactory.EmployeeType.values());
         String[] nameParts = view.getNameOfEmployee();
         String firstName = nameParts[0];
         String lastName = nameParts[1];
@@ -294,6 +266,19 @@ public class SkurupAIFProgram {
 
         } else {
             view.showMessage("Wrong input. Try again.\n");
+        }
+
+    }
+
+    public void loadFromFile(){
+
+        playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
+        coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
+
+        if(playersInClub == null || coachesInClub == null){
+            view.errorMessage("Files with employees could not be loaded. Report to nearest awesome hacker!");
+        } else {
+            view.showMessage("The employees have been loaded from the system...\n");
         }
 
     }

@@ -2,7 +2,7 @@ package com.niklas;
 
 public class EmployeeFactory {
 
-    public enum EmployeeType {
+    public enum EmployeeType implements Describable{
 
         NONE("Back to Main menu"),
         PLAYER("Player"),
@@ -12,6 +12,11 @@ public class EmployeeFactory {
 
         EmployeeType(String menuString) {
             this.menuString = menuString;
+        }
+
+        @Override
+        public String getDescription() {
+            return menuString;
         }
     }
 

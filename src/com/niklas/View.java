@@ -6,17 +6,17 @@ public class View {
 
     private static View instance = null;
 
-    private View(){
+    private View() {
 
     }
 
-    public static View getInstance(){
+    public static View getInstance() {
         if (instance == null)
             instance = new View();
         return instance;
     }
 
-    public enum MainMenuChoice {
+    public enum MainMenuChoice implements Describable {
 
         EXIT_PROGRAM("Exit program"),
         ADD_PLAYER("Add player"),
@@ -26,7 +26,6 @@ public class View {
         SHOW_A_SPECIFIC_EMPLOYEE("Show a specific employee"),
         SHOW_STATISTICS("Show statistics"),
         SAVE_TO_FILE("Save employees"),
-        LOAD_FROM_FILE("Load employees"),
         SHOW_HELP_PAGE("Show help page");
 
         private String description;
@@ -34,92 +33,97 @@ public class View {
         MainMenuChoice(String description) {
             this.description = description;
         }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
     }
 
-    public MainMenuChoice showMenu() {
-
-        System.out.println();
+    public <E extends Describable> E showMenuAndGetChoice(E[] menuItems) {
 
         int i = 0;
         int menuChoice;
+        System.out.println();
 
-        for (MainMenuChoice choice : MainMenuChoice.values()) {
-            System.out.printf("%d: %s\n",i++,choice.description);
+        for (E e : menuItems) {
+            System.out.printf("%d: %s\n", i++, e.getDescription());
         }
+
         System.out.print("\nYour choice: ");
-        while(true) {
+        while (true) {
             menuChoice = HelpUtility.returnsIntAfterErrorCheck();
-            if(menuChoice > MainMenuChoice.values().length - 1 || menuChoice < 0){
+            if (menuChoice > MainMenuChoice.values().length - 1 || menuChoice < 0) {
                 errorMessage("Invalid menu choice. Try again: ");
             } else {
                 break;
             }
         }
         System.out.println();
-        return MainMenuChoice.values()[menuChoice];
+        return menuItems[menuChoice];
     }
 
     public void showMessage(String message) {
         System.out.printf("%s", message);
     }
 
-    public void errorMessage(String errorMessage){
-        System.out.printf("Error: %s",errorMessage);
+    public void errorMessage(String errorMessage) {
+        System.out.printf("Error: %s", errorMessage);
     }
 
-    public String [] addInfoToCreationOfEmployee(){
+    public String[] addInfoToCreationOfEmployee() {
 
         String info;
 
-        while(true) {
+        while (true) {
             System.out.print("Enter the following:" +
                     " first name, last name, age, and (depending on if it's a player/coach) " +
                     "position/typeOfCoach. Everything separated by comma (\",\"). Nothing else!\n" +
                     "Your input: ");
 
             info = HelpUtility.returnsStringAfterErrorCheck();
-            String [] infoParts = info.split(",");
-            if(infoParts.length != 4){
+            String[] infoParts = info.split(",");
+            if (infoParts.length != 4) {
                 errorMessage("Something went wrong with your input, try again.\n");
-            } else{
+            } else {
                 return infoParts;
             }
         }
     }
 
-    public String [] addInfoToCreationOfStatistics(){
+    public String[] addInfoToCreationOfStatistics() {
 
         String info;
 
-        while(true) {
+        while (true) {
             System.out.print("Enter the correct integer of the following:\n" +
                     "season, goals, assists, yellow cards, red cards, games. Separated everything by comma (\",\"). Nothing else!\n" +
                     "Your input: ");
 
             info = HelpUtility.returnsStringAfterErrorCheck();
-            String [] infoParts = info.split(",");
-            if(infoParts.length != 6){
+            String[] infoParts = info.split(",");
+            if (infoParts.length != 6) {
                 errorMessage("Something went wrong with you input, try again.\n");
-            } else{
+            } else {
                 return infoParts;
             }
         }
     }
 
-    public String [] getNameOfEmployee(){
+    public String[] getNameOfEmployee() {
         System.out.print("Enter the first name and the last name of the employee (separated by comma): ");
         String name = HelpUtility.returnsStringAfterErrorCheck();
         return name.split(",");
     }
 
-    public void showEmployees(ArrayList<Player> players, ArrayList<Coach> coaches){
+    public void showEmployees(ArrayList<Player> players, ArrayList<Coach> coaches) {
 
-        System.out.println("\n");
+        System.out.println("");
 
-        for (Player player : players){
+        for (Player player : players) {
             System.out.println(player);
         }
-        for (Coach coach : coaches){
+        for (Coach coach : coaches) {
             System.out.println(coach);
         }
     }
