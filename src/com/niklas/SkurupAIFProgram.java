@@ -2,6 +2,7 @@ package com.niklas;
 
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 public class SkurupAIFProgram {
@@ -32,12 +33,12 @@ public class SkurupAIFProgram {
                     view.showMessage("We bid you farewell, with hope to see you again!");
                     break;
                 case ADD_PLAYER:
-                    addPlayer(EmployeeFactory.EmployeeType.PLAYER, view.addInfoToCreationOfEmployee());
+                    addEmployee(playersInClub, EmployeeFactory.EmployeeType.PLAYER, view.addInfoToCreationOfEmployee(),MAX_PLAYERS);
                     view.showMessage("Player added!\n");
                     addStatisticsToPlayer();
                     break;
                 case ADD_COACH:
-                    addCoach(EmployeeFactory.EmployeeType.COACH, view.addInfoToCreationOfEmployee());
+                    addEmployee(coachesInClub, EmployeeFactory.EmployeeType.COACH, view.addInfoToCreationOfEmployee(),MAX_COACHES);
                     view.showMessage("Coach added!\n");
                     break;
                 case FIRE_EMPLOYEE:
@@ -74,32 +75,12 @@ public class SkurupAIFProgram {
 
     }
 
-    public void addPlayer(EmployeeFactory.EmployeeType employeeType, String [] info) {
+    public <E extends Collection, E1> void addEmployee(E employeeList,E1 employeeType, String[] info, int maxEmployees) {
 
-        if (playersInClub.size() == MAX_PLAYERS) {
-            view.showMessage("I am sorry, the squad is full.");
+        if (employeeList.size() == maxEmployees) {
+            view.errorMessage("Sorry, there are no more room for additional signings. Come back next season.");
         } else {
-            Player player = (Player) EmployeeFactory.createEmployee(employeeType, info);
-            if (player != null) {
-                playersInClub.add(player);
-            } else {
-                view.errorMessage("Could not add the player. Try again.");
-            }
-        }
-
-    }
-
-    public void addCoach(EmployeeFactory.EmployeeType employeeType, String [] info) {
-
-        if (coachesInClub.size() == MAX_COACHES) {
-            view.showMessage("I am sorry, the coach team is full.");
-        } else {
-            Coach coach = (Coach) EmployeeFactory.createEmployee(employeeType, info);
-            if (coach != null) {
-                coachesInClub.add(coach);
-            } else {
-                view.errorMessage("Could not add the coach. Try again.");
-            }
+            employeeList.add(EmployeeFactory.createEmployee((EmployeeFactory.EmployeeType) employeeType, info));
         }
 
     }
@@ -270,12 +251,12 @@ public class SkurupAIFProgram {
 
     }
 
-    public void loadFromFile(){
+    public void loadFromFile() {
 
         playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
         coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
 
-        if(playersInClub == null || coachesInClub == null){
+        if (playersInClub == null || coachesInClub == null) {
             view.errorMessage("Files with employees could not be loaded. Report to nearest awesome hacker!");
         } else {
             view.showMessage("The employees have been loaded from the system...\n");
