@@ -75,7 +75,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public <E extends Collection, E1> void addEmployee(E employeeList,E1 employeeType, String[] info, int maxEmployees) {
+    public <E extends Collection, E1> void addEmployee(E employeeList,E1 employeeType, String[] info, int maxEmployees)  {
 
         if (employeeList.size() == maxEmployees) {
             view.errorMessage("Sorry, there are no more room for additional signings. Come back next season.");
