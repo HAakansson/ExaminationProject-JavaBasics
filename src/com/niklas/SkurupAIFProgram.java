@@ -1,5 +1,6 @@
 package com.niklas;
 
+import java.io.File;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,11 +8,19 @@ import java.util.Collections;
 
 public class SkurupAIFProgram {
 
-    ArrayList<Player> playersInClub = new ArrayList<>();
-    ArrayList<Coach> coachesInClub = new ArrayList<>();
+    private ArrayList<Player> playersInClub = new ArrayList<>();
+    private ArrayList<Coach> coachesInClub = new ArrayList<>();
     private View view;
     public final static int MAX_PLAYERS = 30;
     public final static int MAX_COACHES = 8;
+
+    public ArrayList<Player> getPlayersInClub() {
+        return playersInClub;
+    }
+
+    public ArrayList<Coach> getCoachesInClub() {
+        return coachesInClub;
+    }
 
     public SkurupAIFProgram() {
         view = View.getInstance();
@@ -33,25 +42,18 @@ public class SkurupAIFProgram {
                     view.showMessage("We bid you farewell, with hope to see you again!");
                     break;
                 case ADD_PLAYER:
-                    addEmployee(playersInClub, EmployeeFactory.EmployeeType.PLAYER, view.addInfoToCreationOfEmployee(),MAX_PLAYERS);
+                    addEmployee(playersInClub, EmployeeFactory.EmployeeType.PLAYER, view.addInfoToCreationOfEmployee(), MAX_PLAYERS);
                     view.showMessage("Player added!\n");
                     addStatisticsToPlayer();
                     break;
                 case ADD_COACH:
-                    addEmployee(coachesInClub, EmployeeFactory.EmployeeType.COACH, view.addInfoToCreationOfEmployee(),MAX_COACHES);
+                    addEmployee(coachesInClub, EmployeeFactory.EmployeeType.COACH, view.addInfoToCreationOfEmployee(), MAX_COACHES);
                     view.showMessage("Coach added!\n");
                     break;
                 case FIRE_EMPLOYEE:
                     fireEmployee();
                     break;
                 case SHOW_EMPLOYEES:
-                    view.showMessage("The following employees work for the club:\n");
-                    if (playersInClub.size() == 0) {
-                        view.showMessage("\nNo players play for the club at the moment.\n");
-                    }
-                    if (coachesInClub.size() == 0) {
-                        view.showMessage("No coaches are employed by the club at the moment.");
-                    }
                     view.showEmployees(playersInClub, coachesInClub);
                     break;
                 case SHOW_A_SPECIFIC_EMPLOYEE:
@@ -61,9 +63,7 @@ public class SkurupAIFProgram {
                     showStatistics();
                     break;
                 case SAVE_TO_FILE:
-                    HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
-                    HelpUtility.saveObject(coachesInClub, "src/com/files/coaches.ser", StandardOpenOption.CREATE);
-                    view.showMessage("Employees have been saved to system.\n");
+                    saveToFile();
                     break;
                 case SHOW_HELP_PAGE:
                     HelpUtility.helpText();
@@ -75,7 +75,7 @@ public class SkurupAIFProgram {
 
     }
 
-    public <E extends Collection, E1> void addEmployee(E employeeList,E1 employeeType, String[] info, int maxEmployees)  {
+    public <E extends Collection, E1> void addEmployee(E employeeList, E1 employeeType, String[] info, int maxEmployees) {
 
         if (employeeList.size() == maxEmployees) {
             view.errorMessage("Sorry, there are no more room for additional signings. Come back next season.");
@@ -126,6 +126,7 @@ public class SkurupAIFProgram {
 
     public void fireEmployee() {
 
+        view.showMessage("Do you want to fire an employee from the players or the coaches?");
         EmployeeFactory.EmployeeType employeeType = view.showMenuAndGetChoice(EmployeeFactory.EmployeeType.values());
 
         String[] nameToRemoveParts;
@@ -203,12 +204,28 @@ public class SkurupAIFProgram {
 
         switch (employeeType) {
             case PLAYER:
-                indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
-                playersInClub.get(indexReturned).presentYourself();
+                if (playersInClub != null) {
+                    indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
+                    if (indexReturned != -1) {
+                        playersInClub.get(indexReturned).presentYourself();
+                    } else {
+                        view.errorMessage("The player with that name does not play for the club. Back to main menu..\n");
+                    }
+                } else {
+                    view.errorMessage("There are no players playing for the club at the moment. Back to main menu..\n");
+                }
                 break;
             case COACH:
-                indexReturned = checkIfCoachCoachesForClub(firstName, lastName);
-                coachesInClub.get(indexReturned).presentYourself();
+                if (coachesInClub != null) {
+                    indexReturned = checkIfCoachCoachesForClub(firstName, lastName);
+                    if (indexReturned != -1) {
+                        coachesInClub.get(indexReturned).presentYourself();
+                    } else {
+                        view.errorMessage("The coach with that name does not coach for the club. Back to main menu..\n");
+                    }
+                } else {
+                    view.errorMessage("There are no coaches coaching for the club at the moment. Back to main menu..\n");
+                }
                 break;
             case NONE:
                 view.showMessage("Back to main menu...\n");
@@ -218,37 +235,46 @@ public class SkurupAIFProgram {
 
     public void showStatistics() {
 
-        String[] nameParts = view.getNameOfEmployee();
+        if (playersInClub != null) {
 
-        if (nameParts.length == 2) {
+            String[] nameParts = view.getNameOfEmployee();
 
-            String firstName = nameParts[0];
-            String lastName = nameParts[1];
+            if (nameParts.length == 2) {
 
-            int indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
-            ArrayList<Statistics> temporaryStatsListForPlayer = playersInClub.get(indexReturned).getPlayerStats();
+                String firstName = nameParts[0];
+                String lastName = nameParts[1];
 
-            do {
-                Collections.sort(temporaryStatsListForPlayer);
+                int indexReturned = checkIfPlayerPlaysForClub(firstName, lastName);
 
-                view.showMessage(String.format("\nPlayer - %s %s:\n", firstName, lastName));
-                for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
-                    view.showMessage(stats.toString() + "\n");
+                if (indexReturned != -1) {
+                    ArrayList<Statistics> temporaryStatsListForPlayer = playersInClub.get(indexReturned).getPlayerStats();
+
+                    do {
+                        Collections.sort(temporaryStatsListForPlayer);
+
+                        view.showMessage(String.format("\nPlayer - %s %s:\n", firstName, lastName));
+                        for (Statistics stats : playersInClub.get(indexReturned).getPlayerStats()) {
+                            view.showMessage(stats.toString() + "\n");
+                        }
+
+                        view.showMessage("\nSort by: (1) Season, (2) Goals, (3) Assists, (4) Yellow Cards, (5) Red Cards, (6) Games, (7) Goals Ratio, (0) Exit back to Main Menu.\n" +
+                                "Your choice: ");
+
+                        Statistics.sortingChoice = HelpUtility.returnsIntAfterErrorCheck();
+
+                    } while (Statistics.sortingChoice != 0);
+
+                    view.showMessage("Okay, back to main menu...\n");
+                } else {
+                    view.errorMessage("The player does not play for the club.");
                 }
 
-                view.showMessage("\nSort by: (1) Season, (2) Goals, (3) Assists, (4) Yellow Cards, (5) Red Cards, (6) Games, (7) Goals Ratio, (0) Exit back to Main Menu.\n" +
-                        "Your choice: ");
-
-                Statistics.sortingChoice = HelpUtility.returnsIntAfterErrorCheck();
-
-            } while (Statistics.sortingChoice != 0);
-
-            view.showMessage("Okay, back to main menu...\n");
-
+            } else {
+                view.showMessage("Wrong input. Try again.\n");
+            }
         } else {
-            view.showMessage("Wrong input. Try again.\n");
+            view.errorMessage("There are no players playing for the club at the moment. Back to main menu..\n");
         }
-
     }
 
     public void loadFromFile() {
@@ -256,10 +282,38 @@ public class SkurupAIFProgram {
         playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
         coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
 
-        if (playersInClub == null || coachesInClub == null) {
-            view.errorMessage("Files with employees could not be loaded. Report to nearest awesome hacker!");
+        if (playersInClub == null) {
+            view.errorMessage("Files with players could not be loaded. Report to nearest awesome hacker!\n");
+            playersInClub = new ArrayList<>();
         } else {
-            view.showMessage("The employees have been loaded from the system...\n");
+            view.showMessage("The players have been loaded from the system.\n");
+        }
+        if (coachesInClub == null) {
+            view.errorMessage("Files with coaches could not be loaded. Report to nearest awesome hacker!\n");
+            coachesInClub = new ArrayList<>();
+        } else {
+            view.showMessage("The coaches have been loaded from the system.\n");
+        }
+
+    }
+
+    public void saveToFile() {
+
+        File filePlayers = new File("src/com/files/players.ser");
+        File fileCoaches = new File("src/com/files/coaches.ser");
+
+        if (filePlayers.canWrite()) {
+            HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
+            view.showMessage("The players have been saved to system.\n");
+        } else {
+            view.errorMessage("The file of players is ReadOnly, you can not save to this file. Back to main menu..");
+        }
+
+        if(fileCoaches.canWrite()){
+            HelpUtility.saveObject(coachesInClub, "src/com/files/coaches.ser", StandardOpenOption.CREATE);
+            view.showMessage("The coaches have been saved to system.\n");
+        } else {
+            view.errorMessage("The file of coaches is ReadOnly, you can not save to this file. Back to main menu..\n");
         }
 
     }

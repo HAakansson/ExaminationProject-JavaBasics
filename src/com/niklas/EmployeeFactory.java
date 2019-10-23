@@ -5,8 +5,8 @@ public class EmployeeFactory {
     public enum EmployeeType implements Describable{
 
         NONE("Back to Main menu"),
-        PLAYER("Player"),
-        COACH("Coach");
+        PLAYER("Players"),
+        COACH("Coaches  ");
 
         public String menuString;
 
