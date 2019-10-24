@@ -90,7 +90,7 @@ public class View {
         System.out.print("\nYour choice: ");
         while (true) {
             menuChoice = HelpUtility.returnsIntAfterErrorCheck();
-            if (menuChoice > MainMenuChoice.values().length - 1 || menuChoice < 0) {
+            if (menuChoice > menuItems.length - 1 || menuChoice < 0) {
                 errorMessage("Invalid menu choice. Try again: ");
             } else {
                 break;
