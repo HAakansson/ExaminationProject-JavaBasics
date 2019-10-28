@@ -279,8 +279,8 @@ public class SkurupAIFProgram {
 
     public void loadFromFile() {
 
-        playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/files/players.ser");
-        coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/files/coaches.ser");
+        playersInClub = (ArrayList<Player>) HelpUtility.loadObject("src/com/niklas/players.ser");
+        coachesInClub = (ArrayList<Coach>) HelpUtility.loadObject("src/com/niklas/coaches.ser");
 
         if (playersInClub == null) {
             view.errorMessage("Files with players could not be loaded. Report to nearest awesome hacker!\n");
@@ -299,18 +299,18 @@ public class SkurupAIFProgram {
 
     public void saveToFile() {
 
-        File filePlayers = new File("src/com/files/players.ser");
-        File fileCoaches = new File("src/com/files/coaches.ser");
+        File filePlayers = new File("src/com/niklas/players.ser");
+        File fileCoaches = new File("src/com/niklas/coaches.ser");
 
         if (filePlayers.canWrite()) {
-            HelpUtility.saveObject(playersInClub, "src/com/files/players.ser", StandardOpenOption.CREATE);
+            HelpUtility.saveObject(playersInClub, "src/com/niklas/players.ser", StandardOpenOption.CREATE);
             view.showMessage("The players have been saved to system.\n");
         } else {
             view.errorMessage("The file of players is ReadOnly, you can not save to this file. Back to main menu..");
         }
 
         if(fileCoaches.canWrite()){
-            HelpUtility.saveObject(coachesInClub, "src/com/files/coaches.ser", StandardOpenOption.CREATE);
+            HelpUtility.saveObject(coachesInClub, "src/com/niklas/coaches.ser", StandardOpenOption.CREATE);
             view.showMessage("The coaches have been saved to system.\n");
         } else {
             view.errorMessage("The file of coaches is ReadOnly, you can not save to this file. Back to main menu..\n");
